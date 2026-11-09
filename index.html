@@ -104,17 +104,28 @@ p { margin: 0; }
 /* badge: pure HTML/CSS, hangs on a lanyard that runs up to the top of the page */
 .badge-tile { grid-area: badge; overflow: visible; padding: 0; min-height: 640px; z-index: 2; }
 .scene { position: absolute; inset: 0; pointer-events: none; }
-.swing { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-origin: 0 0; will-change: transform; }
-.strap {
-  position: absolute; left: calc(var(--sw) / -2); top: 0; width: var(--sw); height: var(--strap, 300px);
-  background: var(--accent); overflow: hidden;
+.swing { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-origin: 0 0; will-change: transform;
+  transform-style: preserve-3d; perspective: 1100px; perspective-origin: 0 var(--strap, 300px); --twist: 150px; }
+.strap { position: absolute; left: calc(var(--sw) / -2); top: 0; width: var(--sw); height: var(--strap, 300px); transform-style: preserve-3d; }
+/* the long upper part hangs straight; the lower part is cut into thin slices that twist with the badge */
+.strap-top, .seg {
+  position: absolute; left: 0; width: 100%; overflow: hidden; background: var(--accent);
   box-shadow: inset 2px 0 0 rgba(21,38,65,.18), inset -2px 0 0 rgba(21,38,65,.18);
+  backface-visibility: visible;
+}
+.strap-top { top: 0; height: calc(var(--strap, 300px) - var(--twist) + 1px); transform: rotateY(var(--yaw, 0rad)); }
+.seg {
+  top: calc(var(--strap, 300px) - var(--twist) + var(--i) * var(--twist) / var(--n));
+  height: calc(var(--twist) / var(--n) + 1px);
+  transform: rotateY(calc(var(--yaw, 0rad) + var(--tilt, 0rad) * var(--k)));
 }
 .strap span {
-  position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%);
+  position: absolute; left: 50%; transform: translateX(-50%) scaleX(var(--mir, 1));
+  bottom: calc(10px - var(--d, 0px));
   writing-mode: vertical-rl; white-space: nowrap;
   font: 700 calc(var(--sw) * .3)/1 var(--mono); letter-spacing: .22em; color: var(--board);
 }
+.strap-top span { --d: var(--twist); }
 /* the clamp is part of the card, so it turns and flips with it */
 .clip3d { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-style: preserve-3d; pointer-events: none; }
 .clip3d .ring { transform: translateZ(0);
@@ -406,7 +417,7 @@ dialog[open] { animation: pop .28s cubic-bezier(.2,.9,.3,1.2); }
   <section class="tile badge-tile" id="badge-tile" aria-label="Пропуск Константина Кузьмина">
     <div class="scene" id="badge-scene">
       <div class="swing" id="badge-swing">
-        <div class="strap" aria-hidden="true"><span>PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER ·</span></div>
+        <div class="strap" id="strap" aria-hidden="true"></div>
         <div class="hang">
           <button class="card3d" id="badge-card" type="button" aria-label="Перевернуть пропуск: на обороте контакты">
             <span class="clip3d" aria-hidden="true"><i class="ring"></i><i class="plate pb"></i><i class="plate pm" style="--z:-4px"></i><i class="plate pm" style="--z:-2px"></i><i class="plate pm" style="--z:0px"></i><i class="plate pm" style="--z:2px"></i><i class="plate pm" style="--z:4px"></i><i class="plate pf"></i></span>
@@ -683,6 +694,22 @@ tick(); setInterval(tick, 10000);
     }
   })();
 
+  // lanyard: straight upper part plus thin slices near the badge that twist with it
+  (function () {
+    var strap = document.getElementById('strap'), N = 18;
+    var text = 'PRODUCT LEAD · PROJECT MANAGER · '.repeat(8);
+    var top = document.createElement('div'); top.className = 'strap-top';
+    top.innerHTML = '<span>' + text + '</span>'; strap.appendChild(top);
+    for (var i = 0; i < N; i++) {
+      var s = document.createElement('div'); s.className = 'seg';
+      var k = Math.pow((i + 1) / N, 1.6);
+      s.style.cssText = '--i:' + i + ';--n:' + N + ';--k:' + k.toFixed(4) + ';';
+      var sp = document.createElement('span'); sp.textContent = text;
+      sp.style.setProperty('--d', 'calc(var(--twist) - ' + (i + 1) + ' * var(--twist) / ' + N + ')');
+      s.appendChild(sp); strap.appendChild(s);
+    }
+  })();
+
   // size the card to the tile and run the lanyard from the very top of the page
   var lift = 0;
   function layout() {
@@ -735,6 +762,9 @@ tick(); setInterval(tick, 10000);
     tiltY += (tx * 0.32 - tiltY) * e;
     tiltX += (-ty * 0.14 - tiltX) * e;
     swing.style.transform = 'rotate(' + (-ang) + 'rad)';
+    swing.style.setProperty('--yaw', yaw.toFixed(4) + 'rad');
+    swing.style.setProperty('--tilt', tiltY.toFixed(4) + 'rad');
+    swing.style.setProperty('--mir', Math.cos(yaw) >= 0 ? 1 : -1); // lettering stays readable on the back of the ribbon
     card.style.transform = 'rotateX(' + tiltX + 'rad) rotateY(' + (yaw + tiltY) + 'rad) rotateZ(' + (ang * 1.6 + nudge * 0.6) + 'rad)';
     var turn = tiltY + Math.sin(yaw) * 0.5 + ang;
     card.style.setProperty('--sheen', (-12 + turn * 60) + '%');
