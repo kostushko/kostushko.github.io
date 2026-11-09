@@ -105,8 +105,8 @@ p { margin: 0; }
 .badge-tile { grid-area: badge; overflow: visible; padding: 0; min-height: 640px; z-index: 2; }
 .scene { position: absolute; inset: 0; pointer-events: none; }
 .swing { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-origin: 0 0; will-change: transform;
-  transform-style: preserve-3d; perspective: 1100px; perspective-origin: 0 var(--strap, 300px); --twist: 150px; }
-.strap { position: absolute; left: calc(var(--sw) / -2); top: 0; width: var(--sw); height: var(--strap, 300px); transform-style: preserve-3d; }
+  --twist: 150px; }
+.strap { position: absolute; left: calc(var(--sw) / -2); top: 0; width: var(--sw); height: var(--strap, 300px); perspective: 700px; perspective-origin: 50% 100%; }
 /* the long upper part hangs straight; the lower part is cut into thin slices that twist with the badge */
 .strap-top, .seg {
   position: absolute; left: 0; width: 100%; overflow: hidden; background: var(--accent);
@@ -144,6 +144,15 @@ p { margin: 0; }
   background: #1D2A3B; box-shadow: inset 0 1px 2px rgba(0,0,0,.6);
 }
 .clip3d .pf { transform: translateZ(6px); }
+.clip3d .loop.lb { transform: translateZ(-1px); }
+.clip3d .loop {
+  position: absolute; left: calc(var(--sw) / -2); top: calc(var(--sw) * -1.75); width: var(--sw); height: calc(var(--sw) * .72);
+  background: var(--accent); transform: translateZ(1px);
+  margin-left: calc(var(--sw) * .04); width: calc(var(--sw) * .92);
+  /* the folded end of the ribbon: a touch darker, with a soft crease where it wraps round the ring */
+  box-shadow: inset 0 calc(var(--sw) * .14) 0 rgba(21,38,65,.16), inset 0 -2px 0 rgba(21,38,65,.22), 0 1px 2px rgba(0,0,0,.25);
+  border-radius: 0 0 calc(var(--sw) * .3) calc(var(--sw) * .3);
+}
 .clip3d .pm { transform: translateZ(var(--z)); background: #8E9CAB; box-shadow: none; }
 .clip3d .pm::after { display: none; }
 .clip3d .pb { transform: translateZ(-6px) rotateY(180deg); }
@@ -420,7 +429,7 @@ dialog[open] { animation: pop .28s cubic-bezier(.2,.9,.3,1.2); }
         <div class="strap" id="strap" aria-hidden="true"></div>
         <div class="hang">
           <button class="card3d" id="badge-card" type="button" aria-label="Перевернуть пропуск: на обороте контакты">
-            <span class="clip3d" aria-hidden="true"><i class="ring"></i><i class="plate pb"></i><i class="plate pm" style="--z:-4px"></i><i class="plate pm" style="--z:-2px"></i><i class="plate pm" style="--z:0px"></i><i class="plate pm" style="--z:2px"></i><i class="plate pm" style="--z:4px"></i><i class="plate pf"></i></span>
+            <span class="clip3d" aria-hidden="true"><i class="ring"></i><i class="loop"></i><i class="loop lb"></i><i class="plate pb"></i><i class="plate pm" style="--z:-5px"></i><i class="plate pm" style="--z:-4px"></i><i class="plate pm" style="--z:-3px"></i><i class="plate pm" style="--z:-2px"></i><i class="plate pm" style="--z:-1px"></i><i class="plate pm" style="--z:0px"></i><i class="plate pm" style="--z:1px"></i><i class="plate pm" style="--z:2px"></i><i class="plate pm" style="--z:3px"></i><i class="plate pm" style="--z:4px"></i><i class="plate pm" style="--z:5px"></i><i class="plate pf"></i></span>
             <span class="edge l"></span><span class="edge r"></span><span class="edge t"></span><span class="edge b"></span>
             <span class="face front">
               <span class="f-top"><span class="k">Пропуск · все этапы</span><span class="acc">ACCESS: ALL</span></span>
