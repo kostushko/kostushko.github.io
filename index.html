@@ -117,7 +117,7 @@ p { margin: 0; }
 }
 /* the clamp is part of the card, so it turns and flips with it */
 .clip3d { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-style: preserve-3d; pointer-events: none; }
-.clip3d .ring {
+.clip3d .ring { transform: translateZ(0);
   position: absolute; left: calc(var(--sw) * -.5); top: calc(var(--sw) * -1.55);
   width: var(--sw); height: var(--sw); border-radius: 50%;
   border: calc(var(--sw) * .16) solid #C9D3DD; box-shadow: 0 2px 4px rgba(0,0,0,.35);
@@ -133,6 +133,8 @@ p { margin: 0; }
   background: #1D2A3B; box-shadow: inset 0 1px 2px rgba(0,0,0,.6);
 }
 .clip3d .pf { transform: translateZ(6px); }
+.clip3d .pm { transform: translateZ(var(--z)); background: #8E9CAB; box-shadow: none; }
+.clip3d .pm::after { display: none; }
 .clip3d .pb { transform: translateZ(-6px) rotateY(180deg); }
 .hang { position: absolute; left: 0; top: calc(var(--strap, 300px) + var(--sw) * 1.2); width: 0; height: 0; perspective: 1100px; }
 .card3d {
@@ -149,10 +151,18 @@ p { margin: 0; }
   display: flex; flex-direction: column; padding: 1.15em 1.15em 1em;
   box-shadow: 0 1.8em 3.4em rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.35);
 }
-.face::after { /* lamination highlight that slides as the card tilts */
-  content: ""; position: absolute; inset: -30%; pointer-events: none;
-  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.28) 48%, transparent 56%);
-  transform: translateX(var(--sheen, -35%)); mix-blend-mode: screen;
+.face::before, .face::after { content: ""; position: absolute; pointer-events: none; z-index: 2; }
+/* soft, wide glow of the laminate */
+.face::before {
+  inset: -60% -80%;
+  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.10) 46%, rgba(255,255,255,.16) 50%, rgba(255,255,255,.10) 54%, transparent 62%);
+  transform: translateX(var(--sheen, -40%)); opacity: var(--gloss, .5);
+}
+/* thin crisp reflection line riding with the glow */
+.face::after {
+  inset: -60% -80%;
+  background: linear-gradient(105deg, transparent 49.2%, rgba(255,255,255,.45) 50%, transparent 50.8%);
+  transform: translateX(calc(var(--sheen, -40%) + 6%)); opacity: calc(var(--gloss, .5) * .7);
 }
 .front { background: #E8F4FC; color: var(--board); transform: translateZ(3px); }
 .back { background: var(--board); color: #E8F4FC; transform: rotateY(180deg) translateZ(3px); }
@@ -187,7 +197,7 @@ p { margin: 0; }
 
 .stage-caption { position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; display: grid; gap: 2px; pointer-events: none; }
 .stage-caption b { font-weight: 700; font-size: 14px; }
-@media (prefers-reduced-motion: reduce) { .face::after { display: none; } }
+@media (prefers-reduced-motion: reduce) { .face::before, .face::after { display: none; } }
 
 .f-name, .f-role, .b-title, .b-sub, .b-name, .b-k { display: block; }
 .b-box > span { display: grid; gap: .25em; }
@@ -398,7 +408,7 @@ dialog[open] { animation: pop .28s cubic-bezier(.2,.9,.3,1.2); }
         <div class="strap" aria-hidden="true"><span>PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER ·</span></div>
         <div class="hang">
           <button class="card3d" id="badge-card" type="button" aria-label="Перевернуть пропуск: на обороте контакты">
-            <span class="clip3d" aria-hidden="true"><i class="ring"></i><i class="plate pb"></i><i class="plate pf"></i></span>
+            <span class="clip3d" aria-hidden="true"><i class="ring"></i><i class="plate pb"></i><i class="plate pm" style="--z:-4px"></i><i class="plate pm" style="--z:-2px"></i><i class="plate pm" style="--z:0px"></i><i class="plate pm" style="--z:2px"></i><i class="plate pm" style="--z:4px"></i><i class="plate pf"></i></span>
             <span class="edge l"></span><span class="edge r"></span><span class="edge t"></span><span class="edge b"></span>
             <span class="face front">
               <span class="f-top"><span class="k">Пропуск · все этапы</span><span class="acc">ACCESS: ALL</span></span>
@@ -725,7 +735,9 @@ tick(); setInterval(tick, 10000);
     tiltX += (-ty * 0.14 - tiltX) * e;
     swing.style.transform = 'rotate(' + (-ang) + 'rad)';
     card.style.transform = 'rotateX(' + tiltX + 'rad) rotateY(' + (yaw + tiltY) + 'rad) rotateZ(' + (ang * 1.6 + nudge * 0.6) + 'rad)';
-    card.style.setProperty('--sheen', (-35 + (tiltY + Math.sin(yaw) * 0.6) * 110) + '%');
+    var turn = tiltY + Math.sin(yaw) * 0.5 + ang;
+    card.style.setProperty('--sheen', (-12 + turn * 60) + '%');
+    card.style.setProperty('--gloss', Math.min(1, 0.35 + Math.abs(tiltY) * 1.6 + Math.abs(Math.sin(yaw)) * 0.8).toFixed(3));
   }
   requestAnimationFrame(frame);
 })();
