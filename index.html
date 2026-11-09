@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Резюме Константина Кузьмина</title>
+<meta name="description" content="Константин Кузьмин, руководитель проектов и Product Lead: 23+ проекта в срок для ВТБ, КХЛ, Rostic’s и X5, CPO приложения МИКРОПАРК.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a dark bento board on a solid ultramarine frame; a 3D access badge hangs in the middle column, tilts toward the pointer and flips on click. */
+:root {
+  --frame: #152641;
+  --board: #152641;
+  --tile: #0C1728;
+  --tile-2: rgba(232,244,252,.06);
+  --ink: #E8F4FC;
+  --muted: rgba(232,244,252,.66);
+  --line: rgba(232,244,252,.2);
+  --accent: #C3F84A;
+  --live: #C3F84A;
+  --on-accent: #152641;
+  --past: rgba(232,244,252,.16);
+  --display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh;
+  background: #152641;
+  color: var(--ink);
+  font: 500 15px/1.55 var(--body);
+  -webkit-font-smoothing: antialiased;
+  padding: clamp(10px, 2.2vw, 28px);
+  position: relative;
+  overflow-x: hidden;
+}
+/* solid frame */
+.aura { position: fixed; inset: 0; z-index: 0; background: var(--frame); }
+
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+button { font: inherit; color: inherit; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+
+.board {
+  position: relative; z-index: 1;
+  max-width: 1280px; margin: 0 auto;
+  background: var(--board);
+  border-radius: 30px;
+  padding: 12px;
+  box-shadow: 0 40px 120px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.06);
+  display: grid; gap: 12px;
+  grid-template-columns: 1fr 1.12fr 1fr;
+  grid-template-areas:
+    "hero  badge stats"
+    "hero  badge work"
+    "where badge work"
+    "cta   badge work"
+    "mp    mp    mp"
+    "top   top   top"
+    "skills skills skills"
+    "plan  plan  plan";
+}
+.tile {
+  background: var(--tile);
+  border-radius: 20px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(232,244,252,.08);
+  display: flex; flex-direction: column; gap: 14px;
+  min-width: 0;
+}
+.dots::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+.tile-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+
+/* hero */
+.hero { grid-area: hero; justify-content: space-between; min-height: 380px; container-type: inline-size; }
+.live { display: inline-flex; align-items: center; gap: 8px; color: var(--live); }
+.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 0 rgba(195,248,74,.6); animation: ping 2.2s infinite; }
+@keyframes ping { 70% { box-shadow: 0 0 0 9px rgba(195,248,74,0); } 100% { box-shadow: 0 0 0 0 rgba(195,248,74,0); } }
+.hero h1 {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(34px, 14.5cqi, 80px); line-height: 1.08; letter-spacing: -.045em;
+  hyphens: none; overflow-wrap: normal;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .bio { color: var(--muted); max-width: 46ch; }
+.hero .bio b { color: var(--ink); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; align-content: flex-start; }
+.chips span { padding: 5px 10px; border-radius: 8px; background: var(--tile-2); box-shadow: inset 0 0 0 1px var(--line); font-size: 12.5px; color: var(--muted); }
+
+/* badge: pure HTML/CSS, hangs on a lanyard that runs up to the top of the page */
+.badge-tile { grid-area: badge; overflow: visible; padding: 0; min-height: 640px; z-index: 2; }
+.scene { position: absolute; inset: 0; pointer-events: none; }
+.swing { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-origin: 0 0; will-change: transform; }
+.strap {
+  position: absolute; left: calc(var(--sw) / -2); top: 0; width: var(--sw); height: var(--strap, 300px);
+  background: var(--accent); overflow: hidden;
+  box-shadow: inset 2px 0 0 rgba(21,38,65,.18), inset -2px 0 0 rgba(21,38,65,.18);
+}
+.strap span {
+  position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%);
+  writing-mode: vertical-rl; white-space: nowrap;
+  font: 700 calc(var(--sw) * .3)/1 var(--mono); letter-spacing: .22em; color: var(--board);
+}
+.clip { position: absolute; left: 0; top: var(--strap, 300px); width: 0; height: 0; }
+.clip .ring {
+  position: absolute; left: calc(var(--sw) * -.5); top: calc(var(--sw) * -.35);
+  width: var(--sw); height: var(--sw); border-radius: 50%;
+  border: calc(var(--sw) * .16) solid #C9D3DD; box-shadow: 0 2px 4px rgba(0,0,0,.35);
+}
+.clip .plate {
+  position: absolute; left: calc(var(--sw) * -1.05); top: calc(var(--sw) * .45);
+  width: calc(var(--sw) * 2.1); height: calc(var(--sw) * 1.5); border-radius: calc(var(--sw) * .35);
+  background: #AEBBC8; z-index: 3;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.55), inset 0 -3px 0 rgba(21,38,65,.25), 0 6px 12px rgba(0,0,0,.45);
+}
+.clip .plate::after {
+  content: ""; position: absolute; left: 28%; right: 28%; top: 32%; height: 18%; border-radius: 4px;
+  background: #1D2A3B; box-shadow: inset 0 1px 2px rgba(0,0,0,.6);
+}
+.hang { position: absolute; left: 0; top: calc(var(--strap, 300px) + var(--sw) * 1.2); width: 0; height: 0; perspective: 1100px; }
+.card3d {
+  position: absolute; left: calc(var(--cw) / -2); top: 0; width: var(--cw); height: calc(var(--cw) * 1.414);
+  font-size: calc(var(--cw) / 18.75); /* 16px on a 300px card: everything inside scales in em */
+  transform-style: preserve-3d; transform-origin: 50% 0; will-change: transform;
+  border: 0; padding: 0; background: none; color: inherit; cursor: pointer; pointer-events: auto; text-align: left;
+  border-radius: 1.4em;
+}
+.card3d:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+.face {
+  position: absolute; inset: 0; border-radius: 1.4em; overflow: hidden;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  display: flex; flex-direction: column; padding: 1.15em 1.15em 1em;
+  box-shadow: 0 1.8em 3.4em rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.35);
+}
+.face::after { /* lamination highlight that slides as the card tilts */
+  content: ""; position: absolute; inset: -30%; pointer-events: none;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.28) 48%, transparent 56%);
+  transform: translateX(var(--sheen, -35%)); mix-blend-mode: screen;
+}
+.front { background: #E8F4FC; color: var(--board); transform: translateZ(3px); }
+.back { background: var(--board); color: #E8F4FC; transform: rotateY(180deg) translateZ(3px); }
+.edge { position: absolute; background: #BCCBD8; }
+.edge.l, .edge.r { top: 1.2em; bottom: 1.2em; width: 6px; }
+.edge.l { left: -3px; transform: rotateY(90deg); }
+.edge.r { right: -3px; transform: rotateY(90deg); }
+.edge.t, .edge.b { left: 1.2em; right: 1.2em; height: 6px; }
+.edge.t { top: -3px; transform: rotateX(90deg); }
+.edge.b { bottom: -3px; transform: rotateX(90deg); }
+
+.f-top { display: flex; justify-content: space-between; align-items: center; gap: .5em; margin-top: .55em; }
+.f-top .k { font: 500 .5em/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: rgba(21,38,65,.6); }
+.f-top .acc { font: 700 .48em/1 var(--mono); letter-spacing: .1em; padding: .55em .7em; border-radius: .45em; background: var(--board); color: var(--accent); }
+.f-photo { position: relative; margin-top: .75em; border-radius: .9em; overflow: hidden; background: var(--board); aspect-ratio: 884 / 700; }
+.f-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.f-photo .tag { position: absolute; left: .6em; bottom: .6em; font: 700 .48em/1 var(--mono); letter-spacing: .06em; padding: .55em .7em; border-radius: .45em; background: var(--accent); color: var(--board); }
+.f-name { margin: .7em 0 0; font: 800 1.45em/1.02 var(--display); letter-spacing: -.03em; }
+.f-role { margin-top: .35em; font: 600 .62em/1.3 var(--body); color: rgba(21,38,65,.72); }
+.f-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; gap: .8em; }
+.barcode { display: flex; align-items: stretch; gap: .12em; height: 1.6em; flex: 1; overflow: hidden; }
+.barcode i { background: var(--board); border-radius: 1px; flex: none; }
+.f-foot .k { font: 500 .46em/1.35 var(--mono); color: rgba(21,38,65,.55); text-align: right; text-transform: uppercase; }
+
+.b-k { font: 500 .5em/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: rgba(232,244,252,.55); }
+.b-title { margin: 1.4em 0 0; font: 800 1.9em/1 var(--display); letter-spacing: -.035em; }
+.b-sub { margin-top: .55em; font: 600 .7em/1.4 var(--body); color: rgba(232,244,252,.72); }
+.b-box { margin-top: 1.1em; padding: .9em 1em; border-radius: .9em; background: rgba(232,244,252,.08); display: grid; gap: .7em; }
+.b-box b { font: 700 .82em/1.2 var(--mono); overflow-wrap: anywhere; }
+.b-name { margin-top: auto; font: 700 .7em/1.2 var(--body); color: rgba(232,244,252,.8); }
+.b-stripe { position: absolute; left: 0; right: 0; bottom: 0; height: .45em; background: var(--accent); }
+
+.stage-caption { position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; display: grid; gap: 2px; pointer-events: none; }
+.stage-caption b { font-weight: 700; font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .face::after { display: none; } }
+
+.f-name, .f-role, .b-title, .b-sub, .b-name, .b-k { display: block; }
+.b-box > span { display: grid; gap: .25em; }
+
+/* stats */
+.stats { grid-area: stats; container-type: inline-size; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 8px; flex: 1; }
+.stat { min-width: 0; background: var(--tile-2); border-radius: 14px; padding: 12px 14px; box-shadow: inset 0 0 0 1px var(--line); }
+.stat b { display: block; white-space: nowrap; font: 800 clamp(16px, 6cqi, 26px)/1.1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12px; color: var(--muted); line-height: 1.35; display: block; margin-top: 2px; }
+
+/* work list */
+.work { grid-area: work; }
+.jobs { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; flex: 1; align-content: start; }
+.job-btn {
+  width: 100%; display: grid; grid-template-columns: 42px 1fr auto; gap: 12px; align-items: center;
+  padding: 10px; border: 0; border-radius: 14px; background: transparent; text-align: left; cursor: pointer;
+  transition: background .2s;
+}
+.job-btn:hover { background: var(--tile-2); }
+.job-ico { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font: 800 15px/1 var(--display); color: #fff; }
+.job-btn > span:nth-child(2) { min-width: 0; }
+.job-btn strong { display: block; overflow-wrap: anywhere; font-weight: 700; font-size: 14.5px; line-height: 1.25; }
+.job-btn small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+.job-btn .arrow { color: var(--muted); font-size: 18px; transition: transform .2s, color .2s; }
+.job-btn:hover .arrow { transform: translateX(3px); color: var(--ink); }
+.now { color: var(--live) !important; }
+.work .hint { margin-top: auto; }
+
+/* where */
+.where { grid-area: where; }
+.clock { font: 700 clamp(30px, 4vw, 40px)/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.clock span { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: .2; } }
+.where p { color: var(--muted); font-size: 13.5px; }
+.modes { display: flex; gap: 6px; flex-wrap: wrap; }
+.modes span { font-size: 12.5px; padding: 5px 10px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); }
+
+/* cta */
+.cta { grid-area: cta; padding: 10px; gap: 8px; }
+.copy {
+  width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  padding: 12px 12px 12px 16px; border: 0; border-radius: 16px; cursor: pointer; text-align: left;
+  background: var(--tile-2); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .2s, transform .15s;
+}
+.copy:hover { box-shadow: inset 0 0 0 1px var(--accent); }
+.copy:active { transform: scale(.985); }
+.copy-txt { display: grid; gap: 3px; min-width: 0; }
+.copy-txt .mono { font-size: 10.5px; }
+.copy-txt b { font-weight: 700; font-size: 15px; line-height: 1.25; }
+.copy-act { min-width: 118px; text-align: center; padding: 9px 12px; border-radius: 999px; background: #E8F4FC; color: #152641; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+@media (max-width: 480px) { .copy-act { min-width: 104px; padding: 9px 10px; } .copy-txt b { font-size: 14px; } }
+.copy.done .copy-act { background: var(--live); }
+a.copy { text-decoration: none; color: inherit; }
+.tg-act { background: #C3F84A; color: #152641; }
+
+/* plan / gantt */
+.plan { grid-area: plan; }
+.gantt { position: relative; }
+.g-wrap { position: relative; display: grid; gap: 12px; padding-top: 24px; }
+.scale { position: absolute; inset: 0; pointer-events: none; }
+.scale span { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--line); padding-left: 6px; font: 500 11px/1 var(--mono); color: var(--muted); }
+.today { position: absolute; top: 14px; bottom: 0; width: 2px; background: var(--live); border-radius: 2px; }
+.today b { position: absolute; top: -14px; left: 6px; font: 700 10.5px/1 var(--mono); color: var(--live); white-space: nowrap; }
+.g-row { position: relative; height: 30px; }
+.g-bar {
+  position: absolute; top: 0; bottom: 0; border-radius: 10px; border: 0; cursor: pointer;
+  left: calc(var(--s) / 48 * 100%); width: calc((var(--e) - var(--s)) / 48 * 100%);
+  display: flex; align-items: center; padding: 0 10px; overflow: hidden; min-width: 0;
+  font: 700 12.5px/1 var(--body); color: #fff; white-space: nowrap; text-align: left;
+  transform-origin: left center; animation: grow 1.1s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d);
+}
+.g-bar small { font: 500 11px/1 var(--mono); opacity: .75; margin-left: 8px; }
+.g-bar span { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.g-bar small { flex: none; }
+@keyframes grow { from { clip-path: inset(0 100% 0 0 round 10px); } to { clip-path: inset(0 0 0 0 round 10px); } }
+
+/* featured projects */
+.top { grid-area: top; }
+.top-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 1080px) { .top-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 721px) and (max-width: 1080px) { .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: auto; } .jobs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.proj {
+  position: relative; border-radius: 16px; padding: 18px; min-height: 210px;
+  display: grid; grid-template-rows: auto 1fr auto; gap: 10px;
+  background: var(--tile-2); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden;
+}
+.proj::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c); }
+.proj-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; }
+.logo { height: 30px; width: auto; max-width: 62%; object-fit: contain; display: block; }
+.logo-tall { height: 44px; }
+.proj-kind { text-align: right; }
+.proj-kind { font: 500 11px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--c); }
+.proj h3 { font: 800 clamp(24px, 2.2vw, 30px)/1.05 var(--display); letter-spacing: -.035em; overflow-wrap: anywhere; }
+.proj h3 small { display: block; margin-top: 8px; font: 600 14px/1.35 var(--body); letter-spacing: 0; color: var(--muted); }
+.proj ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.proj li { font-size: 13px; line-height: 1.4; color: var(--muted); padding-left: 14px; position: relative; }
+.proj li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; border-radius: 2px; background: var(--c); }
+.proj li b { color: var(--ink); font-weight: 700; }
+@media (max-width: 560px) { .top-grid { grid-template-columns: 1fr; } .proj { min-height: 0; } }
+
+/* microparc */
+.mp { grid-area: mp; padding: 0; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 0; min-height: 560px; }
+.mp-text { padding: 22px; display: flex; flex-direction: column; gap: 18px; justify-content: center; }
+.mp-text h2 { font: 800 clamp(34px, 4.6vw, 60px)/1 var(--display); letter-spacing: -.045em; }
+.mp-text h2 span { color: #136CFC; }
+.mp-lead { color: rgba(232,244,252,.82); font-size: 16px; max-width: 46ch; }
+.mp-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 560px; }
+.mp-facts div { background: var(--tile-2); border-radius: 14px; padding: 14px 16px; box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+.mp-facts b { display: block; font: 800 clamp(26px, 3vw, 36px)/1.05 var(--display); letter-spacing: -.03em; white-space: nowrap; }
+.mp-facts span { display: block; margin-top: 3px; font-size: 12px; line-height: 1.35; color: var(--muted); }
+.mp-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; max-width: 56ch; }
+.mp-list li { padding-left: 16px; position: relative; color: var(--muted); font-size: 14px; }
+.mp-list li::before { content: ""; position: absolute; left: 0; top: .62em; width: 8px; height: 2px; background: #136CFC; }
+.mp-more { align-self: flex-start; border: 0; border-radius: 999px; padding: 11px 16px; background: #E8F4FC; color: #152641; font-weight: 700; font-size: 13.5px; cursor: pointer; }
+.mp-stage { position: relative; min-height: 520px; background: transparent; }
+.mp-stage .mono { color: var(--muted); }
+.mp-stage canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+.mp-fallback { position: absolute; inset: 0; display: none; place-items: center; padding: 30px; }
+.mp-fallback img { max-height: 100%; max-width: 60%; border-radius: 28px; border: 8px solid #152641; }
+.mp.no-webgl .mp-fallback { display: grid; }
+.mp-stage .mono { position: absolute; left: 0; right: 0; bottom: 16px; text-align: center; pointer-events: none; }
+@media (max-width: 860px) { .mp { grid-template-columns: 1fr; } .mp-stage { min-height: 420px; order: -1; } .mp-text { padding: 18px; } }
+@media (max-width: 480px) { .mp-facts { grid-template-columns: 1fr; gap: 6px; } .mp-facts div { display: flex; align-items: baseline; gap: 12px; } .mp-facts b { font-size: 28px; min-width: 4.2ch; } .mp-facts span { margin: 0; } }
+
+/* skills */
+.skills { grid-area: skills; }
+.skill-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 1080px) { .skill-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .skill-cols { grid-template-columns: 1fr; gap: 16px; } }
+.skill-group { display: grid; gap: 6px; }
+.skill-group .mono { font-size: 10.5px; }
+
+/* dialog */
+dialog {
+  width: min(680px, calc(100vw - 24px)); max-height: calc(100vh - 40px);
+  border: 0; border-radius: 24px; padding: 0; background: var(--tile); color: var(--ink);
+  box-shadow: 0 40px 120px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,255,255,.08);
+}
+dialog::backdrop { background: rgba(5,5,10,.6); backdrop-filter: blur(6px); }
+dialog[open] { animation: pop .28s cubic-bezier(.2,.9,.3,1.2); }
+@keyframes pop { from { transform: translateY(14px) scale(.97); opacity: 0; } }
+.dlg-in { padding: 26px; display: grid; gap: 16px; }
+.dlg-head { display: grid; grid-template-columns: 52px 1fr auto; gap: 14px; align-items: center; }
+.dlg-head .job-ico { width: 52px; height: 52px; font-size: 18px; }
+.dlg-head h3 { font: 800 22px/1.15 var(--display); letter-spacing: -.02em; }
+.close { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--tile-2); cursor: pointer; font-size: 20px; line-height: 1; }
+.dlg-lead { color: var(--muted); }
+.dlg-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.dlg-list li { padding: 12px 14px 12px 34px; border-radius: 12px; background: var(--tile-2); position: relative; line-height: 1.5; }
+.dlg-list li::before { content: ""; position: absolute; left: 14px; top: 20px; width: 8px; height: 8px; border-radius: 2px; background: var(--c, var(--accent)); }
+
+.toast {
+  position: fixed; left: 50%; bottom: 24px; z-index: 10; transform: translate(-50%, 20px); opacity: 0;
+  background: #E8F4FC; color: #152641; font-weight: 700; padding: 12px 18px; border-radius: 999px;
+  transition: .25s; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* responsive */
+@media (max-width: 1080px) {
+  .board {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "hero  badge"
+      "where badge"
+      "cta   badge"
+      "stats stats"
+      "work  work"
+      "mp    mp"
+      "top   top"
+      "skills skills"
+      "plan  plan";
+  }
+}
+@media (max-width: 720px) {
+  .board { grid-template-columns: 1fr; border-radius: 24px; padding: 8px; gap: 8px;
+    grid-template-areas: "badge" "hero" "cta" "stats" "work" "mp" "top" "where" "skills" "plan"; }
+  .hero { min-height: 0; gap: 22px; }
+  .badge-tile { min-height: 600px; }
+  .tile { padding: 18px; }
+  .gantt { overflow-x: auto; }
+  .g-wrap { min-width: 760px; }
+  .gantt { margin: 0 -18px; padding: 0 18px 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="aura" aria-hidden="true"></div>
+
+<main class="board">
+
+  <section class="tile hero dots" aria-labelledby="name">
+    <span class="mono live">Открыт к предложениям</span>
+    <div style="display:grid;gap:18px">
+      <h1 id="name">Привет!<br>Я&nbsp;<em>Константин</em></h1>
+      <p class="bio"><b>Руководитель проектов и Product Lead.</b> Почти 5 лет довожу digital-продукты от идеи до релиза: 23+ проекта в срок для банков, ритейла, спорта и госсектора, команды до 32 человек. С 2026 года как CPO веду приложение МИКРОПАРК: от юнит-экономики до запуска в сторах.</p>
+      <div class="chips"><span>Delivery в срок</span><span>Продуктовая стратегия</span><span>Юнит-экономика</span><span>UX-исследования</span><span>Scrum и Kanban</span><span>Управление рисками</span></div>
+    </div>
+  </section>
+
+  <section class="tile badge-tile" id="badge-tile" aria-label="Пропуск Константина Кузьмина">
+    <div class="scene" id="badge-scene">
+      <div class="swing" id="badge-swing">
+        <div class="strap" aria-hidden="true"><span>PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER · PRODUCT LEAD · PROJECT MANAGER ·</span></div>
+        <div class="clip" aria-hidden="true"><i class="ring"></i><i class="plate"></i></div>
+        <div class="hang">
+          <button class="card3d" id="badge-card" type="button" aria-label="Перевернуть пропуск: на обороте контакты">
+            <span class="edge l"></span><span class="edge r"></span><span class="edge t"></span><span class="edge b"></span>
+            <span class="face front">
+              <span class="f-top"><span class="k">Пропуск · все этапы</span><span class="acc">ACCESS: ALL</span></span>
+              <span class="f-photo"><img src="photo-v2.png" alt="Константин Кузьмин" width="1060" height="840"><span class="tag">23+ ПРОЕКТА В СРОК</span></span>
+              <span class="f-name">Константин<br>Кузьмин</span>
+              <span class="f-role">Руководитель проектов · Product Lead</span>
+              <span class="f-foot"><span class="barcode" id="barcode" aria-hidden="true"></span><span class="k">МСК<br>2026</span></span>
+            </span>
+            <span class="face back">
+              <span class="b-k">Оборотная сторона</span>
+              <span class="b-title">Нашли<br>пропуск?</span>
+              <span class="b-sub">Напишите владельцу, он как раз ищет команду.</span>
+              <span class="b-box">
+                <span><span class="b-k">Telegram</span><b>@kostyakuzm</b></span>
+                <span><span class="b-k">Телефон</span><b>+7 988 321-57-95</b></span>
+                <span><span class="b-k">Почта</span><b>konstantin.kuzmin.y@mail.ru</b></span>
+              </span>
+              <span class="b-name">Константин Кузьмин · Product Lead</span>
+              <span class="b-stripe"></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="stage-caption"><b>Пропуск в команду</b><span class="mono">нажмите на пропуск, чтобы перевернуть</span></div>
+  </section>
+
+  <section class="tile stats" aria-labelledby="stats-h">
+    <div class="tile-head"><h2 id="stats-h" class="mono">В цифрах</h2></div>
+    <div class="stat-grid">
+      <div class="stat"><b>23+</b><span>проекта сдано в срок</span></div>
+      <div class="stat"><b>140+ млн ₽</b><span>общий бюджет проектов</span></div>
+      <div class="stat"><b>на 16%</b><span>ускорил сдачу проектов за счёт автоматизации и&nbsp;ИИ</span></div>
+      <div class="stat"><b>до 32</b><span>человек в моих командах</span></div>
+    </div>
+  </section>
+
+  <section class="tile work" aria-labelledby="work-h">
+    <div class="tile-head"><h2 id="work-h" class="mono">Опыт работы</h2><span class="mono">4 места</span></div>
+    <ul class="jobs">
+      <li><button class="job-btn" type="button" data-job="microparc" id="job-microparc"><span class="job-ico" style="background:#C3F84A;color:#152641">МП</span><span><strong>МИКРОПАРК · CPO</strong><small class="now">05.2026 – сейчас</small><small>Продукт с нуля до запуска в сторах</small></span><span class="arrow" aria-hidden="true">→</span></button></li>
+      <li><button class="job-btn" type="button" data-job="notamedia" id="job-notamedia"><span class="job-ico" style="background:#C3F84A;color:#152641">N</span><span><strong>Notamedia · РПО</strong><small class="now">02.2026 – сейчас</small><small>Проектный офис отдела дизайна</small></span><span class="arrow" aria-hidden="true">→</span></button></li>
+      <li><button class="job-btn" type="button" data-job="chulakov" id="job-chulakov"><span class="job-ico" style="background:var(--past)">ОЧ</span><span><strong>Студия Олега Чулакова · PM</strong><small>06.2024 – 02.2026</small><small>23+ проекта: ВТБ, КХЛ, Rostic’s, X5</small></span><span class="arrow" aria-hidden="true">→</span></button></li>
+      <li><button class="job-btn" type="button" data-job="scientifica" id="job-scientifica"><span class="job-ico" style="background:var(--past)">С</span><span><strong>Сайнтифика</strong><small>02.2023 – 06.2024</small><small>7 госконтрактов, 4 выигранных тендера</small></span><span class="arrow" aria-hidden="true">→</span></button></li>
+    </ul>
+    <p class="mono hint">Нажмите, чтобы открыть детали</p>
+  </section>
+
+  <section class="tile where dots" aria-labelledby="where-h">
+    <div class="tile-head"><h2 id="where-h" class="mono">Часовой пояс МСК</h2><span class="mono">UTC+3</span></div>
+    <div class="clock" id="clock" aria-live="off">--<span>:</span>--</div>
+    <div class="modes"><span>Офис</span><span>Удалёнка</span><span>Гибрид</span><span>Командировки</span></div>
+  </section>
+
+  <section class="tile cta" aria-label="Контакты">
+    <a class="copy" id="tg" href="https://t.me/kostyakuzm" target="_blank" rel="noopener">
+      <span class="copy-txt"><span class="mono">Telegram</span><b>@kostyakuzm</b></span><span class="copy-act tg-act">Написать</span>
+    </a>
+    <button class="copy" type="button" id="copy-phone" data-copy="+7 988 321-57-95" data-done="Телефон скопирован">
+      <span class="copy-txt"><span class="mono">Телефон</span><b>+7 988 321-57-95</b></span><span class="copy-act">Скопировать</span>
+    </button>
+    <button class="copy" type="button" id="copy-email" data-copy="konstantin.kuzmin.y@mail.ru" data-done="Почта скопирована">
+      <span class="copy-txt"><span class="mono">Почта</span><b>konstantin.kuzmin.y<wbr>@mail.ru</b></span><span class="copy-act">Скопировать</span>
+    </button>
+  </section>
+
+  <section class="tile plan" aria-labelledby="plan-h">
+    <div class="tile-head"><h2 id="plan-h" class="mono">Карьера как диаграмма Ганта</h2><span class="mono">2023 – 2026, по месяцам</span></div>
+    <div class="gantt"><div class="g-wrap">
+      <div class="scale" aria-hidden="true">
+        <span style="left:0">2023</span><span style="left:25%">2024</span><span style="left:50%">2025</span><span style="left:75%">2026</span>
+        <i class="today" style="left:calc(46.2 / 48 * 100%)"><b>сейчас</b></i>
+      </div>
+      <div class="g-row"><button class="g-bar" type="button" id="g-scientifica" data-job="scientifica" style="--s:1;--e:17;--d:0s;background:var(--past)"><span>Сайнтифика</span><small>16 мес</small></button></div>
+      <div class="g-row"><button class="g-bar" type="button" id="g-chulakov" data-job="chulakov" style="--s:17;--e:37;--d:.2s;background:var(--past)"><span>Студия Олега Чулакова</span><small>20 мес</small></button></div>
+      <div class="g-row"><button class="g-bar" type="button" id="g-notamedia" data-job="notamedia" style="--s:37;--e:46.2;--d:.4s;background:#C3F84A;color:#152641"><span>Notamedia</span></button></div>
+      <div class="g-row"><button class="g-bar" type="button" id="g-microparc" data-job="microparc" style="--s:40;--e:46.2;--d:.55s;background:#C3F84A;color:#152641"><span>МИКРОПАРК</span></button></div>
+    </div></div>
+  </section>
+
+  <section class="tile mp" id="microparc-block" aria-labelledby="mp-h">
+    <div class="mp-text">
+      <span class="mono live">Мой продукт · с 05.2026</span>
+      <h2 id="mp-h">МИКРОПАРК</h2>
+      <p class="mp-lead">Подписочное приложение коротких вертикальных сериалов для iOS и Android. Как CPO отвечаю за весь продукт: стратегию, юнит-экономику, роадмап, бюджет и рост после запуска.</p>
+      <div class="mp-facts">
+        <div><b>16 453</b><span>установки приложения</span></div>
+        <div><b>7,3%</b><span>конверсия в оплату</span></div>
+        <div><b>78,3%</b><span>досматривают серию</span></div>
+      </div>
+      <ul class="mp-list">
+        <li>Вывел в App Store и Google Play по роадмапу из четырёх MVP-этапов</li>
+        <li>Каталог на старте: 39 сериалов и 1 694 серии</li>
+        <li>Построил финмодель на 2027–2029 под два инвестраунда на 300–450 млн ₽</li>
+      </ul>
+      <button class="mp-more" type="button" id="mp-more" data-job="microparc">Подробнее о проекте</button>
+    </div>
+    <div class="mp-stage" id="mp-stage">
+      <div class="mp-fallback"><img src="microparc-screen.jpg" alt="Главный экран приложения МИКРОПАРК: каталог сериалов"></div>
+      <span class="mono">главный экран приложения</span>
+    </div>
+  </section>
+
+  <section class="tile top" aria-labelledby="top-h">
+    <div class="tile-head"><h2 id="top-h" class="mono">Главные проекты</h2><span class="mono">Студия Олега Чулакова</span></div>
+    <div class="top-grid">
+      <article class="proj" style="--c:#C3F84A">
+        <div class="proj-head"><span class="proj-kind">Банк · веб</span></div>
+        <h3>ВТБ<small>Редизайн сайта</small></h3>
+        <ul><li>Собрал кросс-функциональную команду под проект</li><li>Перевёл работу на Scrum и Kanban</li></ul>
+      </article>
+      <article class="proj" style="--c:#C3F84A">
+        <div class="proj-head"><span class="proj-kind">Спорт · веб и мобайл</span></div>
+        <h3>КХЛ<small>Редизайн и разработка сайта</small></h3>
+        <ul><li>Провёл проект от требований до разработки, сам написал ТЗ</li><li>Сократил этап тестирования на <b>14%</b></li></ul>
+      </article>
+      <article class="proj" style="--c:#C3F84A">
+        <div class="proj-head"><span class="proj-kind">Ритейл · киоски</span></div>
+        <h3>Rostic’s<small>Редизайн киосков самообслуживания</small></h3>
+        <ul><li>Средний чек вырос на <b>12%</b>, заказ занимает <b>1,8 мин</b> вместо 3</li><li>Решение масштабировали с 10 пилотных точек на всю сеть киосков</li></ul>
+      </article>
+      <article class="proj" style="--c:#C3F84A">
+        <div class="proj-head"><span class="proj-kind">UX-исследования</span></div>
+        <h3>X5, Яндекс&nbsp;Пэй, Райффайзен и&nbsp;др.<small>Исследования и аудит сервисов</small></h3>
+        <ul><li>X5: нашли <b>684</b> проблемы в сервисах и защитили выводы перед гендиректорами</li><li>Яндекс Пэй: по CJM и 20 интервью нашли <b>30%</b> отвала на вводе карты</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="tile skills" aria-labelledby="skills-h">
+    <div class="tile-head"><h2 id="skills-h" class="mono">Навыки</h2></div>
+    <div class="skill-cols">
+    <div class="skill-group"><span class="mono">Процессы</span><div class="chips"><span>Agile</span><span>Scrum</span><span>Kanban</span><span>Waterfall</span><span>PMBOK</span><span>PRINCE2, базово</span></div></div>
+    <div class="skill-group"><span class="mono">Продукт</span><div class="chips"><span>Роадмап</span><span>Финмодели</span><span>A/B-тесты</span><span>CJM</span></div></div>
+    <div class="skill-group"><span class="mono">Инструменты</span><div class="chips"><span>Jira</span><span>Confluence</span><span>Notion</span><span>Miro</span><span>Figma</span><span>MS Project</span><span>Smartsheet</span></div></div>
+    <div class="skill-group"><span class="mono">Образование</span><div class="chips"><span>Бакалавр, ЮФУ, 2024</span><span>PM Forum 2025</span></div></div>
+  </div>
+  </section>
+
+</main>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <div class="dlg-in">
+    <div class="dlg-head">
+      <span class="job-ico" id="dlg-ico"></span>
+      <div><h3 id="dlg-title"></h3><p class="mono" id="dlg-meta"></p></div>
+      <button class="close" type="button" id="dlg-close" aria-label="Закрыть">×</button>
+    </div>
+    <p class="dlg-lead" id="dlg-lead"></p>
+    <ul class="dlg-list" id="dlg-list"></ul>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var JOBS = {
+  microparc: {
+    ico: "МП", bg: "#C3F84A", c: "#C3F84A",
+    title: "CPO, руководитель продукта · МИКРОПАРК", meta: "05.2026 – сейчас · удалённо",
+    lead: "Подписочное приложение коротких вертикальных сериалов для iOS и Android. Каталог на старте: 39 сериалов и 1 694 серии.",
+    items: [
+      "Разработал продуктовую стратегию и юнит-экономику подписочной модели ещё до запуска: цена, LTV, CAC и окупаемость в трёх сценариях.",
+      "Составил роадмап из четырёх MVP-этапов (Launch, Retention, Growth, Scale) с целевыми метриками; спроектировал геймификацию и план A/B-тестов триала и онбординга.",
+      "Вывел приложение в App Store и Google Play: 16 453 установки, конверсия установки в оплату 7,3%, серию досматривают до конца 78,3% зрителей.",
+      "Разобрал воронку после старта закупки трафика и нашёл две главные точки потерь: форму оплаты (с неё уходят 76% начавших оплату) и регистрацию после установки.",
+      "Проверил работу подрядчика по договору раздел за разделом и выявил расхождения, включая отсутствие входа через Apple, обязательного для App Store.",
+      "Управляю бюджетом команды и инфраструктуры, около 1 млн ₽ в месяц. За спринт 19.09–06.10.2026 команда закрыла 28 задач и выпустила версию 1.0.8.",
+      "Построил финансовую модель на 2027–2029 годы под два инвестиционных раунда на 300–450 млн ₽ и просчитал выход на зарубежный рынок."
+    ]
+  },
+  notamedia: {
+    ico: "N", bg: "#C3F84A", c: "#C3F84A",
+    title: "РПО в отделе дизайна · Notamedia", meta: "02.2026 – сейчас",
+    lead: "Цифровые сервисы и платформы для бизнеса и государственных структур.",
+    items: [
+      "Сдал 5 проектов из 5 в срок, все приняты заказчиками; параллельно веду ещё 3 проекта.",
+      "Выстроил систему раннего выявления, эскалации и контроля рисков: критических ситуаций стало на 20–30% меньше.",
+      "Пересобрал планирование ресурсов и загрузки команды: сроки считаются точнее, конфликтов за ресурсы меньше, клиенты видят статус работ.",
+      "С нуля запустил тендерное направление отдела: процесс, роли и шаблоны. Качество заявок выросло на 30%.",
+      "Внедрил индивидуальные планы развития: карьерные треки, регулярную обратную связь и связь целей сотрудников с целями бизнеса."
+    ]
+  },
+  chulakov: {
+    ico: "ОЧ", bg: "rgba(232,244,252,.16)", c: "#C3F84A",
+    title: "Project Manager · Студия Олега Чулакова", meta: "06.2024 – 02.2026",
+    lead: "Дизайн-студия, лидер рейтингов Тэглайн и Рейтинга Рунета 2025.",
+    items: [
+      "Сдал в срок 23+ проекта общим бюджетом более 140 млн ₽, руководил кросс-функциональными командами до 32 человек.",
+      "Сократил средний срок проекта с 14 до 10 недель за счёт декомпозиции и параллельной работы команд.",
+      "Поднял NPS клиентов с 42 до 67; 80% клиентов вернулись с повторными проектами. Внедрил дашборды отчётности в Jira.",
+      "ВТБ: собрал кросс-функциональную команду на редизайне сайта и перевёл работу на Scrum и Kanban.",
+      "КХЛ: провёл редизайн и разработку сайта от требований до запуска, сам подготовил ТЗ, сократил тестирование на 14%.",
+      "Rostic’s: после редизайна киосков средний чек вырос на 12%, заказ занимает 1,8 минуты вместо 3; решение масштабировали с 10 пилотных точек на всю сеть.",
+      "Яндекс Пэй: провёл аудит 18 сценариев через CJM и 20 интервью, нашёл 30% отвала на вводе карты и запустил A/B-тесты привязки в один клик.",
+      "X5: в UX/UI-аудите внутренних сервисов нашли 684 проблемы и ещё 74 по интервью; результаты защитил перед генеральными директорами заказчика.",
+      "Также вёл исследования для Райффайзен Банка и других клиентов студии."
+    ]
+  },
+  scientifica: {
+    ico: "С", bg: "rgba(232,244,252,.16)", c: "#C3F84A",
+    title: "Менеджер по работе с госзаказчиками · Сайнтифика", meta: "02.2023 – 06.2024",
+    lead: "",
+    items: [
+      "Привлёк 7 государственных заказчиков и заключил с ними контракты: портфель клиентов компании вырос на 16%.",
+      "Выиграл 4 тендера из 20; выручка за отчётный период выросла на 35%.",
+      "Подготовил более 100 смет и коммерческих предложений и ускорил цикл сделки.",
+      "Координировал более 20 подрядчиков и сократил время подготовки тендерной документации на 8–9%."
+    ]
+  }
+};
+
+/* job dialog */
+var dlg = document.getElementById('dlg');
+function openJob(key) {
+  var j = JOBS[key]; if (!j) return;
+  var ico = document.getElementById('dlg-ico');
+  ico.textContent = j.ico; ico.style.background = j.bg; ico.style.color = j.bg === '#C3F84A' ? '#152641' : '#E8F4FC';
+  document.getElementById('dlg-title').textContent = j.title;
+  document.getElementById('dlg-meta').textContent = j.meta;
+  var lead = document.getElementById('dlg-lead');
+  lead.textContent = j.lead; lead.hidden = !j.lead;
+  var list = document.getElementById('dlg-list'); list.innerHTML = '';
+  list.style.setProperty('--c', j.c);
+  j.items.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; list.appendChild(li); });
+  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+}
+document.querySelectorAll('[data-job]').forEach(function (b) { b.addEventListener('click', function () { openJob(b.dataset.job); }); });
+document.getElementById('dlg-close').addEventListener('click', function () { dlg.close ? dlg.close() : dlg.removeAttribute('open'); });
+dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
+/* copy buttons */
+var toast = document.getElementById('toast'), tt;
+function say(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('show'); }, 1800); }
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    try {
+      navigator.clipboard.writeText(b.dataset.copy).then(function () { say(b.dataset.done); var act = b.querySelector('.copy-act'); if (act) { b.classList.add('done'); act.textContent = 'Скопировано'; setTimeout(function () { b.classList.remove('done'); act.textContent = 'Скопировать'; }, 1800); } }, function () { say(b.dataset.copy); });
+    } catch (e) { say(b.dataset.copy); }
+  });
+});
+
+/* clock in Moscow time */
+var clock = document.getElementById('clock');
+function tick() {
+  try {
+    var p = new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' }).formatToParts(new Date());
+    var h = p.find(function (x) { return x.type === 'hour'; }).value, m = p.find(function (x) { return x.type === 'minute'; }).value;
+    clock.innerHTML = h + '<span>:</span>' + m;
+  } catch (e) {}
+}
+tick(); setInterval(tick, 10000);
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* Badge (HTML/CSS): gentle sway on the lanyard, leans toward the pointer, flips on click. */
+(function () {
+  var tile = document.getElementById('badge-tile');
+  var swing = document.getElementById('badge-swing');
+  var card = document.getElementById('badge-card');
+  if (!tile || !swing || !card) return;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // barcode made from the name, so it is stable and unique
+  (function () {
+    var bc = document.getElementById('barcode'), s = 'KONSTANTINKUZMINPRODUCTLEAD';
+    for (var i = 0; i < 46; i++) {
+      var el = document.createElement('i');
+      el.style.width = (1 + (s.charCodeAt(i % s.length) * (i + 3)) % 4) + 'px';
+      bc.appendChild(el);
+    }
+  })();
+
+  // size the card to the tile and run the lanyard from the very top of the page
+  var lift = 0;
+  function layout() {
+    var r = tile.getBoundingClientRect();
+    if (!r.width) return;
+    lift = Math.max(0, Math.round(r.top + window.scrollY));
+    var caption = 76;
+    var cw = Math.round(Math.min(300, r.width * 0.64, (r.height - caption - 70) / 1.414));
+    var sw = Math.max(20, Math.round(cw * 0.105));
+    var cardH = cw * 1.414;
+    var clipH = sw * 1.2;
+    var top = Math.max(40, (r.height - caption - cardH) / 2);   // card's top edge inside the tile
+    var strap = lift + top - clipH;
+    swing.style.top = (-lift) + 'px';
+    swing.style.setProperty('--cw', cw + 'px');
+    swing.style.setProperty('--sw', sw + 'px');
+    swing.style.setProperty('--strap', strap + 'px');
+  }
+  if (window.ResizeObserver) new ResizeObserver(layout).observe(tile);
+  window.addEventListener('resize', layout);
+  layout();
+
+  // motion
+  var px = 0, py = 0, inside = false;
+  var sway = 0, nudge = 0, nudgeV = 0, flip = 0, yaw = 0, tiltX = 0, tiltY = 0;
+  tile.addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    var r = tile.getBoundingClientRect();
+    px = ((e.clientX - r.left) / r.width) * 2 - 1;
+    py = ((e.clientY - r.top) / r.height) * 2 - 1;
+    inside = true;
+  });
+  tile.addEventListener('pointerleave', function () { inside = false; });
+  card.addEventListener('click', function () { flip += Math.PI; nudgeV += 0.35; });
+
+  var last = performance.now(), t0 = last;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    var dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now;
+    var t = (now - t0) / 1000;
+    var e = 1 - Math.pow(0.0025, dt);
+    var tx = inside ? px : 0, ty = inside ? py : 0;
+    // swing around the pivot at the top of the page: keep sideways travel small whatever the length
+    var rope = Math.max(200, lift + 300);
+    var swayT = (reduce ? 0 : Math.sin(t * 0.8) * 10) + tx * 14;          // px of sideways travel
+    sway += (swayT - sway) * e * 0.6;
+    nudgeV += (-nudge * 30 - nudgeV * 4) * dt; nudge += nudgeV * dt;
+    var ang = Math.atan2(sway, rope) + nudge * 0.25;
+    yaw += (flip - yaw) * (1 - Math.pow(0.02, dt));
+    tiltY += (tx * 0.32 - tiltY) * e;
+    tiltX += (-ty * 0.14 - tiltX) * e;
+    swing.style.transform = 'rotate(' + (-ang) + 'rad)';
+    card.style.transform = 'rotateX(' + tiltX + 'rad) rotateY(' + (yaw + tiltY) + 'rad) rotateZ(' + (ang * 1.6 + nudge * 0.6) + 'rad)';
+    card.style.setProperty('--sheen', (-35 + (tiltY + Math.sin(yaw) * 0.6) * 110) + '%');
+  }
+  requestAnimationFrame(frame);
+})();
+
+</script>
+<script>
+/* МИКРОПАРК: a 3D phone that sways gently, screen toward the viewer. */
+(function () {
+  var stage = document.getElementById('mp-stage');
+  var block = document.getElementById('microparc-block');
+  if (!stage) return;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fail() { block.classList.add('no-webgl'); }
+  if (!window.THREE) return fail();
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch (e) { return fail(); }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setClearColor(0x000000, 0);
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+
+  /* studio reflections */
+  var pmrem = new THREE.PMREMGenerator(renderer), env = new THREE.Scene();
+  env.add(new THREE.Mesh(new THREE.BoxGeometry(20, 20, 20), new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide })));
+  function panel(w, h, x, y, z, col, k) {
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(k), side: THREE.DoubleSide }));
+    m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m);
+  }
+  panel(3, 9, -6, 1, 4, 0xffffff, 5);
+  panel(2, 8, 6, 0, 3, 0xffffff, 3);
+  panel(8, 2, 0, 7, 2, 0xffffff, 3);
+  panel(6, 6, 0, 2, -8, 0xffffff, 1.6);
+  scene.environment = pmrem.fromScene(env, 0.03).texture;
+
+  var key = new THREE.DirectionalLight(0xffffff, 1.2);
+  key.position.set(1.5, 4, 2.5); key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024); key.shadow.radius = 6;
+  var sc = key.shadow.camera; sc.left = -1.5; sc.right = 1.5; sc.top = 1.5; sc.bottom = -1.5; sc.near = 0.5; sc.far = 10;
+  scene.add(key, new THREE.HemisphereLight(0xffffff, 0x152641, 0.35));
+
+  function rounded(w, h, r) {
+    var s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+    s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+    s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+    s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y); return s;
+  }
+  function flat(w, h, r) {
+    var g = new THREE.ShapeGeometry(rounded(w, h, r), 24), uv = g.attributes.uv, p = g.attributes.position;
+    for (var i = 0; i < uv.count; i++) uv.setXY(i, (p.getX(i) + w / 2) / w, (p.getY(i) + h / 2) / h);
+    return g;
+  }
+
+  /* ---------- phone ---------- */
+  var W = 0.8, H = W / (720 / 1566), SW = W - 0.012, SH = H - 0.012, R = 0.13, D = 0.08, BEV = 0.014;
+  var phone = new THREE.Group();
+  var bodyGeo = new THREE.ExtrudeGeometry(rounded(W, H, R), { depth: D, bevelEnabled: true, bevelThickness: BEV, bevelSize: BEV, bevelSegments: 6, curveSegments: 24 });
+  bodyGeo.translate(0, 0, -D / 2);
+  var frameMat = new THREE.MeshPhysicalMaterial({ color: 0x3a3a42, metalness: 0.95, roughness: 0.28, clearcoat: 0.4, clearcoatRoughness: 0.2 });
+  var body = new THREE.Mesh(bodyGeo, frameMat); body.castShadow = true; phone.add(body);
+
+  var zf = D / 2 + BEV;
+  var bezel = new THREE.Mesh(flat(W - 0.012, H - 0.012, R - 0.01), new THREE.MeshPhysicalMaterial({ color: 0x050507, roughness: 0.1, metalness: 0.2, clearcoat: 1 }));
+  bezel.position.z = zf + 0.001; phone.add(bezel);
+
+  var screenMat = new THREE.MeshBasicMaterial({ color: 0x111111, toneMapped: false });
+  var screen = new THREE.Mesh(flat(SW, SH, R - 0.01), screenMat); screen.position.z = zf + 0.002; phone.add(screen);
+  new THREE.TextureLoader().load('microparc-screen.jpg', function (t) {
+    t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    screenMat.map = t; screenMat.color.set(0xffffff); screenMat.needsUpdate = true;
+  });
+  var island = new THREE.Mesh(flat(0.2, 0.058, 0.029), new THREE.MeshBasicMaterial({ color: 0x000000 }));
+  island.position.set(0, SH / 2 - 0.045, zf + 0.003); phone.add(island);
+  var glass = new THREE.Mesh(flat(W - 0.012, H - 0.012, R - 0.01), new THREE.MeshPhysicalMaterial({ color: 0x000000, roughness: 0.04, metalness: 0, clearcoat: 1, envMapIntensity: 0.55, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+  glass.position.z = zf + 0.004; phone.add(glass);
+
+  // back: frosted dark glass with the product name
+  var bc = document.createElement('canvas'); bc.width = 512; bc.height = 1100; var g = bc.getContext('2d');
+  g.fillStyle = '#152641'; g.fillRect(0, 0, 512, 1100);
+  g.fillStyle = 'rgba(255,255,255,.88)'; g.font = '800 64px Manrope, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText('МИКРОПАРК', 256, 640);
+  g.fillStyle = '#136CFC'; g.fillRect(226, 700, 60, 8);
+  var backTex = new THREE.CanvasTexture(bc); backTex.encoding = THREE.sRGBEncoding;
+  var back = new THREE.Mesh(flat(W - 0.012, H - 0.012, R - 0.01), new THREE.MeshPhysicalMaterial({ map: backTex, roughness: 0.32, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.15 }));
+  back.position.z = -zf - 0.001; back.rotation.y = Math.PI; phone.add(back);
+
+  // camera bump with two lenses
+  var bumpGeo = new THREE.ExtrudeGeometry(rounded(0.3, 0.3, 0.08), { depth: 0.02, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 4, curveSegments: 16 });
+  var bump = new THREE.Mesh(bumpGeo, new THREE.MeshPhysicalMaterial({ color: 0x152641, roughness: 0.2, metalness: 0.4, clearcoat: 1 }));
+  bump.rotation.y = Math.PI; bump.position.set(W / 2 - 0.2, H / 2 - 0.2, -zf - 0.001); bump.castShadow = true; phone.add(bump);
+  var ringMat = new THREE.MeshPhysicalMaterial({ color: 0x8a8a94, metalness: 1, roughness: 0.25 });
+  var lensMat = new THREE.MeshPhysicalMaterial({ color: 0x05050a, metalness: 0.3, roughness: 0.05, clearcoat: 1 });
+  [[0.06, 0.06], [-0.06, -0.06]].forEach(function (o) {
+    var ring = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.03, 32), ringMat);
+    ring.rotation.x = Math.PI / 2; ring.position.set(W / 2 - 0.2 - o[0], H / 2 - 0.2 + o[1], -zf - 0.04); phone.add(ring);
+    var lens = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.032, 32), lensMat);
+    lens.rotation.x = Math.PI / 2; lens.position.copy(ring.position); lens.position.z -= 0.002; phone.add(lens);
+  });
+  // side buttons
+  function btn(x, y, h) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(0.014, h, 0.03), frameMat); m.position.set(x, y, 0); phone.add(m);
+  }
+  btn(W / 2 + BEV + 0.004, 0.25, 0.22);
+  btn(-W / 2 - BEV - 0.004, 0.4, 0.1); btn(-W / 2 - BEV - 0.004, 0.22, 0.16);
+  scene.add(phone);
+
+  var floor = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.ShadowMaterial({ opacity: 0.38 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -H / 2 - 0.16; floor.receiveShadow = true; scene.add(floor);
+
+  /* ---------- sizing ---------- */
+  function fit() {
+    var r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
+    renderer.setSize(r.width, r.height, false);
+    camera.aspect = r.width / r.height;
+    var t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    var dist = Math.max((H * 0.6) / t, (W * 1.25) / (t * camera.aspect));
+    camera.position.set(0, 0.25, dist); camera.lookAt(0, -0.02, 0); camera.updateProjectionMatrix();
+  }
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(stage); else window.addEventListener('resize', fit);
+  fit();
+
+  /* ---------- motion: gentle sway facing the viewer ---------- */
+  var hover = false, px = 0, py = 0, yaw = 0, tiltX = 0, visible = true, last = performance.now(), t0 = last;
+  stage.addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    var r = stage.getBoundingClientRect(); hover = true;
+    px = ((e.clientX - r.left) / r.width) * 2 - 1; py = ((e.clientY - r.top) / r.height) * 2 - 1;
+  });
+  stage.addEventListener('pointerleave', function () { hover = false; px = 0; py = 0; });
+  if (window.IntersectionObserver) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(stage);
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    var dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now;
+    if (!visible) return;
+    var t = (now - t0) / 1000;
+    // gentle sway, always screen-side; hovering leans it toward the pointer
+    var swayY = reduce ? 0 : Math.sin(t * 0.6) * 0.32;
+    var targetY = hover ? px * 0.4 : swayY;
+    yaw += (targetY - yaw) * (1 - Math.pow(hover ? 0.03 : 0.2, dt));
+    tiltX += ((hover ? py * 0.12 : 0) - tiltX) * (1 - Math.pow(0.05, dt));
+    phone.rotation.set(tiltX - 0.04, yaw, reduce ? 0 : Math.sin(t * 0.7) * 0.015);
+    phone.position.y = reduce ? 0 : Math.sin(t * 1.1) * 0.03;
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>
