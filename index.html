@@ -218,6 +218,21 @@ p { margin: 0; }
 .f-name, .f-role, .b-title, .b-sub, .b-name, .b-k { display: block; }
 .b-box > span { display: grid; gap: .25em; }
 
+
+/* cursor glow on information tiles: a soft light that follows the pointer, plus a brighter rim near it */
+.glow { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .35s ease; z-index: 0; }
+.glow::before, .glow::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.glow::before { background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(195,248,74,.10), transparent 65%); }
+.glow::after {
+  padding: 1.5px;
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(195,248,74,.85), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.tile.lit .glow { opacity: 1; }
+.board > .tile:not(.badge-tile) > *:not(.glow) { position: relative; z-index: 1; }
+@media (hover: none), (prefers-reduced-motion: reduce) { .glow { display: none; } }
+
 /* stats */
 .stats { grid-area: stats; container-type: inline-size; }
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 8px; flex: 1; }
@@ -932,6 +947,25 @@ tick(); setInterval(tick, 10000);
   requestAnimationFrame(frame);
 })();
 
+</script>
+<script>
+/* cursor glow: one listener, light follows the pointer inside each information tile */
+(function () {
+  if (window.matchMedia && !matchMedia('(hover: hover)').matches) return;
+  var tiles = [].slice.call(document.querySelectorAll('.board > .tile:not(.badge-tile)'));
+  tiles.forEach(function (t) { var g = document.createElement('span'); g.className = 'glow'; g.setAttribute('aria-hidden', 'true'); t.insertBefore(g, t.firstChild); });
+  var last = null;
+  document.addEventListener('pointermove', function (e) {
+    var t = e.target.closest && e.target.closest('.board > .tile:not(.badge-tile)');
+    if (last && last !== t) last.classList.remove('lit');
+    if (!t) { last = null; return; }
+    var r = t.getBoundingClientRect();
+    t.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    t.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    t.classList.add('lit'); last = t;
+  }, { passive: true });
+  document.addEventListener('pointerleave', function () { if (last) last.classList.remove('lit'); last = null; });
+})();
 </script>
 </body>
 </html>
