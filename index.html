@@ -104,7 +104,7 @@ p { margin: 0; }
 /* badge: pure HTML/CSS, hangs on a lanyard that runs up to the top of the page */
 .badge-tile { grid-area: badge; overflow: visible; padding: 0; min-height: 640px; z-index: 2; }
 .scene { position: absolute; inset: 0; pointer-events: none; }
-.swing { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-origin: 0 0; will-change: transform;
+.swing { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-origin: 0 0;
   --twist: 150px; }
 .strap { position: absolute; left: calc(var(--sw) / -2); top: 0; width: var(--sw); height: var(--strap, 300px); perspective: 700px; perspective-origin: 50% 100%; }
 /* the long upper part hangs straight; the lower part is cut into thin slices that twist with the badge */
@@ -160,7 +160,7 @@ p { margin: 0; }
 .card3d {
   position: absolute; left: calc(var(--cw) / -2); top: 0; width: var(--cw); height: calc(var(--cw) * 1.414);
   font-size: calc(var(--cw) / 18.75); /* 16px on a 300px card: everything inside scales in em */
-  transform-style: preserve-3d; transform-origin: 50% 0; will-change: transform;
+  transform-style: preserve-3d; transform-origin: 50% 0;
   border: 0; padding: 0; background: none; color: inherit; cursor: pointer; pointer-events: auto; text-align: left;
   border-radius: 1.4em;
 }
@@ -425,7 +425,7 @@ dialog[open] { animation: pop .28s cubic-bezier(.2,.9,.3,1.2); }
         <div class="hang">
           <button class="card3d" id="badge-card" type="button" aria-label="Перевернуть пропуск: на обороте контакты">
             <span class="clip3d" aria-hidden="true"><i class="ring"></i><i class="loop"></i><i class="loop lb"></i><i class="plate pb"></i><i class="plate pm" style="--z:-5px"></i><i class="plate pm" style="--z:-4px"></i><i class="plate pm" style="--z:-3px"></i><i class="plate pm" style="--z:-2px"></i><i class="plate pm" style="--z:-1px"></i><i class="plate pm" style="--z:0px"></i><i class="plate pm" style="--z:1px"></i><i class="plate pm" style="--z:2px"></i><i class="plate pm" style="--z:3px"></i><i class="plate pm" style="--z:4px"></i><i class="plate pm" style="--z:5px"></i><i class="plate pf"></i></span>
-            <span class="core" style="--z:-2.5px"></span><span class="core" style="--z:-1.5px"></span><span class="core" style="--z:-0.5px"></span><span class="core" style="--z:0.5px"></span><span class="core" style="--z:1.5px"></span><span class="core" style="--z:2.5px"></span>
+            <span class="core" style="--z:-2px"></span><span class="core" style="--z:-1px"></span><span class="core" style="--z:0px"></span><span class="core" style="--z:1px"></span><span class="core" style="--z:2px"></span>
             <span class="face front">
               <span class="f-top"><span class="k">Пропуск · все этапы</span><span class="acc">ACCESS: ALL</span></span>
               <span class="f-photo"><img src="photo-v2.png" alt="Константин Кузьмин" width="1060" height="840"><span class="tag">23+ ПРОЕКТА В СРОК</span></span>
@@ -747,7 +747,10 @@ tick(); setInterval(tick, 10000);
     inside = true;
   });
   tile.addEventListener('pointerleave', function () { inside = false; });
-  card.addEventListener('click', function () { flip += Math.PI; nudgeV += 0.35; });
+  card.addEventListener('click', function () {
+    if (Math.abs(flip - yaw) > 0.6) return;           // still turning: ignore extra clicks
+    flip += Math.PI; nudgeV = Math.min(nudgeV + 0.35, 0.45);
+  });
 
   var last = performance.now(), t0 = last;
   function frame(now) {
@@ -763,6 +766,7 @@ tick(); setInterval(tick, 10000);
     nudgeV += (-nudge * 30 - nudgeV * 4) * dt; nudge += nudgeV * dt;
     var ang = Math.atan2(sway, rope) + nudge * 0.6;
     yaw += (flip - yaw) * (1 - Math.pow(0.02, dt));
+    if (Math.abs(flip - yaw) < 0.0005) { var w = Math.round(flip / (2 * Math.PI)) * 2 * Math.PI; flip -= w; yaw = flip; }
     tiltY += (tx * 0.32 - tiltY) * e;
     tiltX += (-ty * 0.14 - tiltX) * e;
     swing.style.transform = 'rotate(' + (-ang) + 'rad)';
