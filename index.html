@@ -155,14 +155,14 @@ p { margin: 0; }
 /* soft, wide glow of the laminate */
 .face::before {
   inset: -60% -80%;
-  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.10) 46%, rgba(255,255,255,.16) 50%, rgba(255,255,255,.10) 54%, transparent 62%);
+  background: linear-gradient(105deg, transparent 43%, rgba(255,255,255,.06) 47.5%, rgba(255,255,255,.10) 50%, rgba(255,255,255,.06) 52.5%, transparent 57%);
   transform: translateX(var(--sheen, -40%)); opacity: var(--gloss, .5);
 }
 /* thin crisp reflection line riding with the glow */
 .face::after {
   inset: -60% -80%;
-  background: linear-gradient(105deg, transparent 49.2%, rgba(255,255,255,.45) 50%, transparent 50.8%);
-  transform: translateX(calc(var(--sheen, -40%) + 6%)); opacity: calc(var(--gloss, .5) * .7);
+  background: linear-gradient(105deg, transparent 49.6%, rgba(255,255,255,.3) 50%, transparent 50.4%);
+  transform: translateX(calc(var(--sheen, -40%) + 6%)); opacity: calc(var(--gloss, .5) * .55);
 }
 .front { background: #E8F4FC; color: var(--board); transform: translateZ(3px); }
 .back { background: var(--board); color: #E8F4FC; transform: rotateY(180deg) translateZ(3px); }
